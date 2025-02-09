@@ -36,10 +36,13 @@
 
 ## Key Insights & Findings:-
 
-### 1) The Technology and Finance industries faced the highest layoffs
-### 2) Layoffs peaked during mid-2020 and late 2022
-### 3) Companies in early funding stages (Seed & Series A) were more likely to lay off employees
-### 4) The USA and Canada had the highest number of layoffs
+### 1) The Retail and the Other industries faced the highest layoffs
+### 2) Layoffs peaked during mid-2020 and in the three months of 2022.
+### 3) The top 3 layoffs of 2020 by the company were Uber, Booking.com and Groupon 
+### 4) The top 3 layoffs of 2021 by the company were Bytedance, Katerra and Zillow.  
+### 5) The top 3 layoffs of 2022 by the company were Meta, Amazon and Cisco. 
+### 5) The top 3 layoffs of 2022 by the company were Google, Microsoft and Ericsson. 
+
 
 
 
