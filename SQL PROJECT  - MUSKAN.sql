@@ -22,7 +22,7 @@ SELECT *,
 ROW_NUMBER() OVER(
 PARTITION BY company, location, industry, total_laid_off, percentage_laid_off, `date`, stage, country, funds_raised_millions
 ORDER BY company) AS row_num 
-FROM layoffs_staging;                                -- we've written date with backticks like '   ' as date is a keyword in sql  
+FROM layoffs_staging;                                -- we've written date with backticks like '   ' as the date is a keyword in SQL  
 
 
 WITH duplicate_cte AS 
@@ -37,6 +37,7 @@ SELECT *
 FROM duplicate_cte
 WHERE row_num > 1; 
 
+
 WITH duplicate_cte AS 
 ( 
 SELECT *, 
@@ -49,7 +50,7 @@ DELETE FROM layoffs_staging
 WHERE row_num > 1;
 ----------------------------------------------------------------
 
--- now we'll make the temporary table 
+-- Now we'll make the temporary table 
 
 CREATE TABLE `layoffs_staging2` (
   `company` text,
@@ -146,7 +147,7 @@ MODIFY COLUMN `date` DATE;
 
 SELECT *                         
 FROM layoffs_staging2
-WHERE total_laid_off IS NULL;           -- IS NULLis used to check the null values in the specific column 
+WHERE total_laid_off IS NULL;           -- IS NULL is used to check the null values in the specific column 
 
 SELECT *                         
 FROM layoffs_staging2
@@ -166,7 +167,7 @@ JOIN layoffs_staging2 t2
      ON t1.company = t2.company 
 WHERE t1.industry IS NULL OR t1.industry = '' AND t2.industry IS NOT NULL;
 
-SELECT t1.industry, t2.industry                       -- same query as above its just to make the query more clear
+SELECT t1.industry, t2.industry                       -- the same query as above it is just to make the query clear
 FROM layoffs_staging2 t1
 JOIN layoffs_staging2 t2
      ON t1.company = t2.company 
@@ -176,9 +177,9 @@ UPDATE layoffs_staging2 t1
 JOIN layoffs_staging2 t2
      ON t1.company = t2.company 
 SET t1.industry = t2.industry 
-WHERE t1.industry IS NULL AND t2.industry IS NOT NULL;              -- (OR t1.industry = '') - we've removed this part from where clause as neeche we've updated those blank values to null values so while doing we no longer needed to write this 
+WHERE t1.industry IS NULL AND t2.industry IS NOT NULL;              -- (OR t1.industry = '') - we've removed this part from where clause as below we've updated those blank values to null values so while doing we no longer needed to write this 
 
--- Lets update those blank values to null value from T1 then our JOIN & UPDATE statement will act on. 
+-- Let's update those blank values to null values from T1 then our JOIN & UPDATE statement will act on. 
 
 UPDATE layoffs_staging2
 SET industry = NULL 
@@ -187,24 +188,24 @@ WHERE industry = '' ;
 SELECT *
 FROM layoffs_staging2;
 
--- Remove col. & rows if necessary 
+------------- Remove col. & rows if necessary ---------------------
 
 SELECT *
 FROM layoffs_staging2
 WHERE total_laid_off IS NULL AND percentage_laid_off IS NULL; 
 
-DELETE FROM layoffs_staging2                       -- Removing those rows that contains null values together in total laid offand percentage laid off column
+DELETE FROM layoffs_staging2                       -- Removing those rows that contain null values together in the total laid off and percentage laid off column
 WHERE total_laid_off IS NULL AND percentage_laid_off IS NULL; 
 
-ALTER TABLE layoffs_staging2               -- Removing row_num column as its no longer needed 
+ALTER TABLE layoffs_staging2               -- Removing row_num column as it is no longer needed 
 DROP COLUMN row_num;
 
 SELECT *
 FROM layoffs_staging2;
 
 ----------------------------------------------------------------------------------------------------------
-                                                -- Exploratory Data Analysis 
-                                                
+                                               -- Exploratory Data Analysis --
+----------------------------------------------------------------------------------------------------------                                                
 SELECT MAX(total_laid_off)
 FROM layoffs_staging2;
                                                 
@@ -225,16 +226,16 @@ FROM layoffs_staging2
 WHERE percentage_laid_off = 1
 ORDER BY funds_raised_millions DESC;                                                
                                                 
-SELECT company, SUM(total_laid_off)        -- Through this query we can see which company hit the most layoff 
+SELECT company, SUM(total_laid_off)        -- Through this query, we can see which company hit the most layoff 
 FROM layoffs_staging2
 GROUP BY company
-ORDER BY 2 DESC;             -- Here 2 stands for second column which is sum of total_laid_off                                                 
+ORDER BY 2 DESC;             -- Here 2 stands for the second column which is the sum of total_laid_off                                                 
                                                 
 SELECT MIN(`date`), MAX(`date`) 
 FROM layoffs_staging2;                                                
 
 SELECT industry, SUM(total_laid_off)        -- Through this query we can see which industry hit the most layoff 
-FROM layoffs_staging2               -- In this case consumer and retail hit very hard lay off
+FROM layoffs_staging2               -- In this case, consumer and retail hit very hard layoff
 GROUP BY industry
 ORDER BY 2 DESC;  
 
@@ -243,13 +244,13 @@ FROM layoffs_staging2
 GROUP BY country
 ORDER BY 2 DESC;  
 
-SELECT `date`, SUM(total_laid_off)        -- Through this query we can see which recent date hit what no. layoff 
+SELECT `date`, SUM(total_laid_off)        -- Through this query, we can see which recent date hit what no. layoff 
 FROM layoffs_staging2                     -- but it is showing the layoff on individual dates instead of doing group by as there are many different dates so we'll now do group by by year from the date
 GROUP BY `date`
 ORDER BY 1 DESC;  
 
 SELECT YEAR(`date`), SUM(total_laid_off)
-FROM layoffs_staging2                -- Here we can see that in 2022 there is a whole lot of layoff but jese jese 2023 aaya layoff kam hota gya so it's kind of rapping up
+FROM layoffs_staging2                -- Here we can see that in 2022 there is a whole lot of layoff but jese jese 2023 aaya layoff got less so it's kind of rapping up
 GROUP BY YEAR(`date`)
 ORDER BY 1 DESC;  
 
@@ -258,7 +259,7 @@ FROM layoffs_staging2               -- stage tells us the stage of the company l
 GROUP BY stage
 ORDER BY 2 DESC;
 
-SELECT SUBSTRING(`date`, 6, 2) AS `MONTH`, SUM(total_laid_off)            -- This rolling total is not that great becuase of month as in single month we have all years
+SELECT SUBSTRING(`date`, 6, 2) AS `MONTH`, SUM(total_laid_off)            -- This rolling total is not that great because of the month as in a single month we have all years
 FROM layoffs_staging2
 GROUP BY `MONTH`;
 
@@ -269,7 +270,7 @@ ORDER BY 1;
 
 SELECT SUBSTRING(`date`, 1, 7) AS `MONTH`, SUM(total_laid_of)         -- I write the above query again with the WHERE clause as I wanted to get rid of that NULL date row  
 FROM layoffs_staging2
-WHERE SUBSTRING(`date`, 1, 7) IS NOT NULL             -- Here I wrote substring poora bcoz WHERE clause mai woh `MONTH` nhi accept kr rha tha
+WHERE SUBSTRING(`date`, 1, 7) IS NOT NULL             
 GROUP BY `MONTH`
 ORDER BY 1; 
 
@@ -289,7 +290,7 @@ FROM layoffs_staging2
 GROUP BY company, YEAR(`date`)
 ORDER BY 3 DESC;
 
-WITH Company_Year (company, years, total_laid_off) AS   -- Here in bracket we have written the column name with the name we want, so in order to change the column names while using CTE we can write like this 
+WITH Company_Year (company, years, total_laid_off) AS         -- Here in the bracket, we have written the column names with the name we want, so to change the column names while using CTE we can write like this 
 (
 SELECT company, YEAR(`date`), SUM(total_laid_off)        
 FROM layoffs_staging2
@@ -300,14 +301,14 @@ FROM Company_Year
 WHERE years IS NOT NULL
 ORDER BY Ranking ASC;
 
--- NOW WE WANT TO FILTER ON THE RANKING COLUMN LIKE IF WE WANT TOP 5 RANK PER YEAR THEN WE WILL CREATE 2 CTEs AND WRITE THE DIFFERENT WHERE CONDITION 
+-- NOW WE WANT TO FILTER ON THE RANKING COLUMN LIKE IF WE WANT THE TOP 5 RANK PER YEAR THEN WE WILL CREATE 2 CTEs AND WRITE THE DIFFERENT WHERE CONDITION 
 
 WITH Company_Year (company, years, total_laid_off) AS   
 (
 SELECT company, YEAR(`date`), SUM(total_laid_off)        
 FROM layoffs_staging2
 GROUP BY company, YEAR(`date`)
-), Company_Year_Rank AS           -- we created this another cte becuase humme uss rank pe condition lagani thi jahape window function use kia so where clause would not have supported it 
+), Company_Year_Rank AS                                        -- we created this another CTE because humme uss rank pe condition lagani thi jahape window function use kia so where clause would not have supported it 
 (SELECT *, DENSE_RANK() OVER(PARTITION BY years ORDER BY total_laid_off DESC) AS Ranking
 FROM Company_Year
 WHERE years IS NOT NULL
